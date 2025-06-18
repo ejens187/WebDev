@@ -1,0 +1,48 @@
+ /* This applies to the whole document */
+ body{
+ font-family: Arial, Helvetica, sans-serif;
+ font-size: medium;
+ color: black;
+ background-color: antiquewhite;
+ }
+ /* This just applies to the li tags */
+ li{
+ font-size: medium;
+ color: #111;
+ font-weight: normal;
+}
+/* And this applies to just the a tags */
+ a{
+ font-size: medium;
+ color: blue;
+ text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+    font-weight: bold;
+    font-size: large;
+}
+
+a:visited {
+    color: blueviolet;
+}
+
+ .bold{font-weight: bold;}
+ .underline{text-decoration: underline;}
+ .wavy{text-decoration: wavy;}
+ .justify{justify-content: left;}
+
+ .homeback{
+    background-image: url('/images/picture_me.JPEG');
+    background-size: cover;
+    background-position: top right;
+    height: 200ch;
+}
+
+.box{
+    border-width: 2px;
+    border-style: solid;
+    border-color: #111;
+
+}

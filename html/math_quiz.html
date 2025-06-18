@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Math Quiz Game</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background: #f2f2f2;
+      padding: 2rem;
+    }
+    #app {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+      display: inline-block;
+      width: 90%;
+      max-width: 400px;
+    }
+    input, button {
+      padding: 0.6rem 1rem;
+      margin: 0.5rem;
+      font-size: 1rem;
+    }
+    .hidden {
+      display: none;
+    }
+    .correct {
+      color: green;
+    }
+    .wrong {
+      color: red;
+    }
+    #back-button {
+      font-size: 1.2rem;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      cursor: pointer;
+    }
+    ol {
+      text-align: left;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="back-button" class="hidden" onclick="goBack()">⬅</div>
+
+  <div id="app">
+    <!-- Difficulty Selection -->
+    <div id="difficulty-screen">
+      <h2>Select Difficulty</h2>
+      <button onclick="startQuiz('easy')">Easy</button>
+      <button onclick="startQuiz('moderate')">Moderate</button>
+      <button onclick="startQuiz('difficult')">Difficult</button>
+    </div>
+
+    <!-- Quiz Screen -->
+    <div id="quiz-screen" class="hidden">
+      <h2>Math Quiz</h2>
+      <p id="question">What is 1 + 1?</p>
+      <input type="number" id="answer" placeholder="Your answer">
+      <br>
+      <button onclick="checkAnswer()">Submit</button>
+      <p id="feedback"></p>
+      <button onclick="nextQuestion()">Next Question</button>
+      <p>Score: <span id="score">0</span> | Lives: <span id="lives">3</span></p>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="gameover-screen" class="hidden">
+      <h2>Game Over</h2>
+      <p>Your score: <span id="final-score"></span></p>
+      <input type="text" id="player-name" placeholder="Enter your name" />
+      <br>
+      <button onclick="saveScore()">Save Score</button>
+    </div>
+
+    <!-- Leaderboard -->
+    <div id="leaderboard-screen" class="hidden">
+      <h2>Leaderboard (Top 5)</h2>
+      <ol id="leaderboard-list"></ol>
+      <button onclick="restart()">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    let difficulty = '';
+    let score = 0;
+    let lives = 3;
+    let correctAnswer = 0;
+
+    const questionEl = document.getElementById('question');
+    const answerEl = document.getElementById('answer');
+    const feedbackEl = document.getElementById('feedback');
+    const scoreEl = document.getElementById('score');
+    const livesEl = document.getElementById('lives');
+    const finalScoreEl = document.getElementById('final-score');
+    const leaderboardList = document.getElementById('leaderboard-list');
+
+    function startQuiz(level) {
+      difficulty = level;
+      score = 0;
+      lives = 3;
+      scoreEl.textContent = score;
+      livesEl.textContent = lives;
+
+      document.getElementById('difficulty-screen').classList.add('hidden');
+      document.getElementById('quiz-screen').classList.remove('hidden');
+      document.getElementById('back-button').classList.remove('hidden');
+      generateQuestion();
+    }
+
+    function goBack() {
+      document.getElementById('difficulty-screen').classList.remove('hidden');
+      document.getElementById('quiz-screen').classList.add('hidden');
+      document.getElementById('back-button').classList.add('hidden');
+      feedbackEl.textContent = '';
+      answerEl.value = '';
+    }
+
+    function generateQuestion() {
+      let num1, num2, op;
+
+      if (difficulty === 'easy') {
+        num1 = Math.floor(Math.random() * 10) + 1;
+        num2 = Math.floor(Math.random() * 10) + 1;
+        op = Math.random() < 0.5 ? '+' : '-';
+        correctAnswer = op === '+' ? num1 + num2 : num1 - num2;
+        questionEl.textContent = `What is ${num1} ${op} ${num2}?`;
+
+      } else if (difficulty === 'moderate') {
+        num1 = Math.floor(Math.random() * 12) + 1;
+        num2 = Math.floor(Math.random() * 12) + 1;
+        op = Math.random() < 0.5 ? '×' : '÷';
+
+        if (op === '×') {
+          correctAnswer = num1 * num2;
+          questionEl.textContent = `What is ${num1} × ${num2}?`;
+        } else {
+          correctAnswer = num1;
+          let product = num1 * num2;
+          questionEl.textContent = `What is ${product} ÷ ${num2}?`;
+        }
+
+      } else if (difficulty === 'difficult') {
+        const type = Math.floor(Math.random() * 3);
+        if (type === 0) {
+          num1 = Math.floor(Math.random() * 5) + 2;
+          num2 = Math.floor(Math.random() * 3) + 2;
+          correctAnswer = Math.pow(num1, num2);
+          questionEl.textContent = `What is ${num1}^${num2}?`;
+        } else if (type === 1) {
+          const a = Math.floor(Math.random() * 10);
+          const b = Math.floor(Math.random() * 10);
+          const c = Math.floor(Math.random() * 5);
+          correctAnswer = (a + b) * c;
+          questionEl.textContent = `What is (${a} + ${b}) × ${c}?`;
+        } else {
+          num1 = Math.floor(Math.random() * 20) - 10;
+          num2 = Math.floor(Math.random() * 20) - 10;
+          op = Math.random() < 0.5 ? '+' : '-';
+          correctAnswer = op === '+' ? num1 + num2 : num1 - num2;
+          questionEl.textContent = `What is ${num1} ${op} ${num2}?`;
+        }
+      }
+
+      answerEl.value = '';
+      feedbackEl.textContent = '';
+    }
+
+    function checkAnswer() {
+      const userAnswer = parseFloat(answerEl.value);
+      if (userAnswer === correctAnswer) {
+        feedbackEl.textContent = "Correct!";
+        feedbackEl.className = "correct";
+        score++;
+      } else {
+        feedbackEl.textContent = `Wrong! The correct answer was ${correctAnswer}`;
+        feedbackEl.className = "wrong";
+        lives--;
+      }
+
+      scoreEl.textContent = score;
+      livesEl.textContent = lives;
+
+      if (lives <= 0) {
+        endGame();
+      }
+    }
+
+    function nextQuestion() {
+      if (lives > 0) {
+        generateQuestion();
+      }
+    }
+
+    function endGame() {
+      document.getElementById('quiz-screen').classList.add('hidden');
+      document.getElementById('gameover-screen').classList.remove('hidden');
+      finalScoreEl.textContent = score;
+    }
+
+    function saveScore() {
+      const name = document.getElementById('player-name').value || 'Anonymous';
+      const leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
+      leaderboard.push({ name, score });
+      leaderboard.sort((a, b) => b.score - a.score);
+      const top5 = leaderboard.slice(0, 5);
+      localStorage.setItem('leaderboard', JSON.stringify(top5));
+      showLeaderboard();
+    }
+
+    function showLeaderboard() {
+      document.getElementById('gameover-screen').classList.add('hidden');
+      document.getElementById('leaderboard-screen').classList.remove('hidden');
+      leaderboardList.innerHTML = '';
+
+      const leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
+      leaderboard.forEach(entry => {
+        const li = document.createElement('li');
+        li.textContent = `${entry.name} – ${entry.score}`;
+        leaderboardList.appendChild(li);
+      });
+    }
+
+    function restart() {
+      document.getElementById('leaderboard-screen').classList.add('hidden');
+      document.getElementById('difficulty-screen').classList.remove('hidden');
+      document.getElementById('back-button').classList.add('hidden');
+    }
+  </script>
+
+</body>
+</html>

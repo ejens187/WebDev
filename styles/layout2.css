@@ -1,0 +1,52 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.header {
+  height: 60px;
+  border-bottom: 1px solid aliceblue;
+  padding: 5px;
+  color: ;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  min-height: 0; /* allows inner scroll if needed */
+}
+
+.leftmenu {
+  width: 180px;
+  border-right: 1px solid aliceblue;
+  padding: 5px;
+  background: #f4f4f4;
+}
+
+.mainbody {
+  flex: 1;
+  padding: 5px;
+  overflow-y: auto;
+  background: white;
+}
+
+.rightmenu {
+  width: 280px;
+  border-left: 1px solid aliceblue;
+  padding: 5px;
+  background: #f4f4f4;
+}
+
+.footer {
+  height: 60px;
+  border-top: 1px solid aliceblue;
+  padding: 5px;
+  color: white;
+}
